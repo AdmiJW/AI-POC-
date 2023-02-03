@@ -20,10 +20,13 @@ public class Drone : MonoBehaviour {
     private Animator animator;
     // To spray pesticide
     private ParticleSystem sprayer;
+    // The propeller sound
+    private AudioSource propellerSound;
+    
     // The camera below the drone
     [SerializeField] private Camera belowCam;
-    // The camera following the drone
-    [SerializeField] private Camera followCam;
+    // The camera following the drone, with audio listener
+    [SerializeField] private GameObject followCam;
 
 
     // Movement parameters
@@ -38,6 +41,7 @@ public class Drone : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         sprayer = GetComponentInChildren<ParticleSystem>();
+        propellerSound = GetComponent<AudioSource>();
     }
 
 
@@ -51,7 +55,7 @@ public class Drone : MonoBehaviour {
         Vector3 directionVector = (target - transform.position).normalized;
 
         // Move to the calculated position by apply force
-        rb.AddForce(directionVector * 0.3f);
+        rb.AddForce(directionVector * speed);
 
         // If the drone is close enough to the chunk, move to the next chunk
         if (Vector3.Distance(transform.position, target) < 0.1f)
@@ -59,7 +63,7 @@ public class Drone : MonoBehaviour {
 
         // Apply torque towards target direction
         Vector3 torque = Vector3.Cross(transform.forward, directionVector);
-        rb.AddTorque(torque * 0.05f);
+        rb.AddTorque(torque * rotateSpeed);
     }
 
 
@@ -79,8 +83,14 @@ public class Drone : MonoBehaviour {
 
 
     public void Propeller(bool start) {
-        if (start) animator.SetTrigger("Spin");
-        else animator.SetTrigger("Stop");
+        if (start) {
+            animator.SetTrigger("Spin");
+            propellerSound.Play();
+        }
+        else {
+            animator.SetTrigger("Stop");
+            propellerSound.Stop();
+        }
     }
 
     public void Spray(bool spray) {
@@ -90,7 +100,7 @@ public class Drone : MonoBehaviour {
 
     public void ActivateCamera(bool activate) {
         belowCam.enabled = activate;
-        followCam.enabled = activate;
+        followCam.SetActive(activate);
     }
 
     public void AutoPilot(bool start) {

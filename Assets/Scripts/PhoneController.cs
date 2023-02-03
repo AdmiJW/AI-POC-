@@ -8,6 +8,8 @@ public class PhoneController : MonoBehaviour {
     [SerializeField] private GameObject manualControlScreen;
     [SerializeField] private GameObject autoPilotScreen;
 
+    Lean.Gui.LeanButton button;
+
     // Statuses
     [SerializeField] private TMP_Text manualTemperature;
     [SerializeField] private TMP_Text manualHumidity;
@@ -58,9 +60,9 @@ public class PhoneController : MonoBehaviour {
         selectDroneScreen.SetActive(false);
         manualControlScreen.SetActive(true);
 
-        GameManager.instance.mainCamera.enabled = false;
-        drone.Propeller(true);
+        GameManager.instance.mainCamera.SetActive(false);
         drone.ActivateCamera(true);
+        drone.Propeller(true);
         drone.AutoPilot(false);
     }
 
@@ -69,7 +71,7 @@ public class PhoneController : MonoBehaviour {
         manualControlScreen.SetActive(false);
         selectDroneScreen.SetActive(true);
 
-        GameManager.instance.mainCamera.enabled = true;
+        GameManager.instance.mainCamera.SetActive(true);
         drone.ActivateCamera(false);
     }
 
@@ -78,18 +80,18 @@ public class PhoneController : MonoBehaviour {
         if (drone != this.drone) return;
 
         if (manualControlScreen.activeSelf) {
-            manualTemperature.text = "Temperature: " + stats.temp;
-            manualHumidity.text = "Humidity: " + stats.humidity;
-            manualHealth.text = "Crop Health: " + stats.health;
-            manualPestDensity.text = "Est. Pest Density: " + stats.pestDensity;
-            manualAcidity.text = "Est. Acidity: " + stats.acidity;
+            manualTemperature.text = stats.temp;
+            manualHumidity.text = stats.humidity;
+            manualHealth.text = stats.health;
+            manualPestDensity.text = stats.pestDensity;
+            manualAcidity.text = stats.acidity;
         }
         else if (autoPilotScreen.activeSelf) {
-            autoTemperature.text = "Temperature: " + stats.temp;
-            autoHumidity.text = "Humidity: " + stats.humidity;
-            autoHealth.text = "Crop Health: " + stats.health;
-            autoPestDensity.text = "Est. Pest Density: " + stats.pestDensity;
-            autoAcidity.text = "Est. Acidity: " + stats.acidity;
+            autoTemperature.text = stats.temp;
+            autoHumidity.text = stats.humidity;
+            autoHealth.text = stats.health;
+            autoPestDensity.text = stats.pestDensity;
+            autoAcidity.text = stats.acidity;
         }
     }
 
@@ -99,7 +101,7 @@ public class PhoneController : MonoBehaviour {
         selectDroneScreen.SetActive(false);
         autoPilotScreen.SetActive(true);
 
-        GameManager.instance.mainCamera.enabled = false;
+        GameManager.instance.mainCamera.SetActive(false);
         drone.ActivateCamera(true);
     }
 
@@ -108,7 +110,7 @@ public class PhoneController : MonoBehaviour {
         autoPilotScreen.SetActive(false);
         selectDroneScreen.SetActive(true);
 
-        GameManager.instance.mainCamera.enabled = true;
+        GameManager.instance.mainCamera.SetActive(true);
         drone.ActivateCamera(false);
     }
 
